@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f2e9">
+  <meta name="description" content="Піксельні хованки зі Славіком, Дашею й Катею. Знайди друзів або сховайся у затишному ізометричному світі.">
+  <title>Хованки · Славік, Даша й Катя</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="world.js" defer></script>
+  <script src="paint.js" defer></script>
+  <script src="game.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="header">
+      <div class="brand"><div class="brand-icon" aria-hidden="true"><i></i><i></i></div><div><h1>Хованки</h1><p>Славік, Даша й Катя</p></div></div>
+      <div class="header-actions">
+        <button class="plain" id="sound" aria-pressed="true">Звук увімкнено</button>
+        <button class="plain" id="help">Як грати <span>?</span></button>
+      </div>
+    </header>
+    <div class="layout">
+      <section class="game-card" aria-label="Ігрове поле">
+        <div class="game-top">
+          <div class="place"><span class="live-dot"></span><strong id="map-title">Наш майданчик</strong></div>
+          <div class="time-group"><span id="phase">Обирай свою пригоду</span><b id="time">0:42</b><button id="pause" class="icon-button" aria-label="Пауза" hidden>Ⅱ</button></div>
+        </div>
+        <div class="stage">
+          <canvas id="canvas" width="800" height="478" aria-label="Ізометрична карта хованок. Рух — стрілки або WASD, дія — E, особлива дія — Q."></canvas>
+          <div class="scene-label" id="scene-label"><span>Твій затишний двір</span><small>Натисни «Грати», коли будеш готовий</small></div>
+          <div class="overlay" id="overlay" hidden><div class="result-card">
+            <span class="result-symbol" id="result-symbol"></span><h2 id="result-title"></h2><p id="result-text"></p>
+            <div class="result-actions"><button class="primary" id="again" hidden>Ще один раунд</button><button class="plain" id="choose" hidden>Обрати карту</button></div>
+          </div></div>
+        </div>
+        <div class="game-bottom">
+          <div class="context"><kbd id="action-key">↗</kbd><span id="context">Клацни підлогу, щоб піти, або предмет, щоб діяти</span></div>
+          <div class="friends" id="friends" aria-label="Друзі"></div>
+        </div>
+        <div class="touch-bar" id="touch-bar" hidden>
+          <div class="pad"><button data-dir="up" aria-label="Вгору">▲</button><button data-dir="left" aria-label="Ліворуч">◀</button><button data-dir="down" aria-label="Вниз">▼</button><button data-dir="right" aria-label="Праворуч">▶</button></div>
+          <button id="touch-act" class="primary">Сховатися</button>
+        </div>
+      </section>
+      <aside class="setup">
+        <h2>Твоя пригода</h2>
+        <fieldset><legend>Ким граєш?</legend><div class="heroes" id="heroes"></div></fieldset>
+        <fieldset><legend>Що робитимеш?</legend><div class="roles">
+          <button data-role="hide" aria-pressed="true"><span>◒</span> Ховатися</button>
+          <button data-role="seek" aria-pressed="false"><span>⌕</span> Шукати</button>
+        </div></fieldset>
+        <fieldset><legend>Де граємо?</legend><div class="maps" id="maps"></div></fieldset>
+        <p class="role-note" id="role-note">12 секунд, щоб сховатися. Потім протримайся 42 секунди.</p>
+        <button class="primary start" id="start" disabled>Завантаження…</button>
+        <button class="ability" id="ability" hidden><kbd>Q</kbd><span>Відволікти</span><b id="ability-time"></b></button>
+        <div class="noise" id="noise" hidden><div><span>Тиша у схованці</span><b id="noise-time"></b></div><progress id="noise-meter" max="18" value="0"></progress></div>
+      </aside>
+    </div>
+    <div class="under-game"><p id="notice" role="status">Один гравець, троє друзів і десятки схованок.</p><span class="keys"><kbd>WASD</kbd> рух <kbd>E</kbd> дія <kbd>Q</kbd> хитрість <kbd>Esc</kbd> пауза</span></div>
+  </main>
+  <dialog id="rules"><form method="dialog">
+    <div class="dialog-top"><h2>Раз, два, три — шукай!</h2><button class="icon-button" value="close" aria-label="Закрити">×</button></div>
+    <h3>Ховатися</h3><p>За 12 секунд знайди вільний предмет зі світлою позначкою. Натисни E або клацни його, щоб сховатися. Переживи 42 секунди пошуку.</p>
+    <p>Через 18 секунд у схованці чути шурхіт. Вийди й зміни місце або натисни Q, щоб відволікти шукача камінчиком. На відкритому місці шукач помітить тебе, якщо підійде близько.</p>
+    <h3>Шукати</h3><p>Знайди обох друзів за 60 секунд. E перевіряє предмет. Натисни Q, щоб прислухатись — біля однієї зі схованок з’явиться підказка. Ця дія відновлюється за 12 секунд.</p>
+    <h3>У що можна сховатися</h3><p>У будинку — шафа, ліжко, штори, скриня, диван, стіл, вазон, стелаж, кошик і лавка. Надворі — ще й кущі, будиночки, ящики, гірка, шини, бочки, намети та сіно.</p>
+    <p>Рухайся стрілками або WASD. Можна також клацати підлогу й предмети або користуватися екранними кнопками на телефоні. Esc ставить раунд на паузу.</p>
+    <button class="primary" value="close">Зрозуміло, граємо!</button>
+  </form></dialog>
+</body>
+</html>
